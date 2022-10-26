@@ -1,0 +1,62 @@
+# versão do docker compose
+version: 3
+#serviços utilizados
+services:
+  nginx:
+    build:
+      dockerfile: ./docker/nginx.dockerfile
+      context: .
+    image: davi/nginx
+    container_name: nginx
+    ports:
+      #colocar um traço significa que pode ser passado mais de uma informação
+      - "80:80"
+    network:
+      - production-network
+    depends_on:
+      - "node1"
+      - "node2"
+      - "node3"
+  mongodb:
+    image: mongo
+    networks:
+      - production-network
+
+  node1:
+    build:
+      dockerfile: ./docker/file.dockerfile
+      context: .
+    image: davi/curso_docker
+    container_name: container1_curso_alura
+    ports:
+      - "3000"
+    networks:
+      - production-network
+    depends_on:
+      -"mongodb"
+
+  node2:
+    build:
+      dockerfile: ./docker/file.dockerfile
+      context: .
+    image: davi/curso_docker
+    container_name: container2_curso_alura
+    ports:
+      - "3000"
+    networks:
+      - production-network
+
+  node3:
+    build:
+      dockerfile: ./docker/file.dockerfile
+      context: .
+    image: davi/curso_docker
+    container_name: container3_curso_alura
+    ports:
+      - "3000"
+    networks:
+      - production-network          
+networks:
+  production-network:
+    driver: bridge
+
